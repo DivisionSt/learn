@@ -1,0 +1,110 @@
+{
+  "name": "Cloud Engineering Lab",
+
+  // Base image: Ubuntu 24.04 LTS, solid and well-supported
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+
+  "features": {
+    // Docker-in-Docker: lets you build and run containers inside your Codespace
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "dockerDashComposeVersion": "v2"
+    },
+
+    // Go: general purpose language, great for cloud tooling and CLI work
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "latest"
+    },
+
+    // Terraform: core IaC tool, installs the HashiCorp-signed binary
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "version": "latest",
+      "tflint": "latest",      // linter for catching Terraform mistakes early
+      "terragrunt": "latest"   // wrapper tool you'll likely encounter in real teams
+    },
+
+    // AWS CLI v2: essential for interacting with AWS from the terminal
+    "ghcr.io/devcontainers/features/aws-cli:1": {
+      "version": "latest"
+    },
+
+    // GitHub CLI: useful for managing repos, PRs, and Codespaces itself from terminal
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    },
+
+    // kubectl: Kubernetes CLI, you'll want this once containers come into scope
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest",
+      "helm": "latest",        // package manager for Kubernetes
+      "minikube": "none"       // skip minikube, you won't need a local k8s cluster here
+    },
+
+    // Node.js LTS: not your focus, but many cloud tools and CLIs depend on it quietly
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
+  },
+
+  // VS Code extensions that will auto-install in this environment
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Terraform
+        "hashicorp.terraform",              // syntax, validation, and fmt for .tf files
+        "hashicorp.hcl",                    // HCL language support (used beyond Terraform too)
+
+        // Go
+        "golang.go",                        // official Go extension: intellisense, debugging, testing
+
+        // Cloud & Infrastructure
+        "amazonwebservices.aws-toolkit-vscode", // AWS resource browser and Lambda debugging
+        "ms-kubernetes-tools.vscode-kubernetes-tools", // k8s manifest support
+
+        // Docker
+        "ms-azuretools.vscode-docker",      // Dockerfile and compose file support
+
+        // Git & Productivity
+        "eamodio.gitlens",                  // supercharges git history and blame in the editor
+        "github.vscode-pull-request-github", // manage PRs without leaving VS Code
+        "streetsidesoftware.code-spell-checker", // catches typos in comments and strings
+
+        // General quality of life
+        "ms-vscode.makefile-tools",         // Makefile support, common in IaC repos
+        "redhat.vscode-yaml",               // YAML validation, essential for k8s and CI configs
+        "tamasfe.even-better-toml"          // TOML support, used in Go projects and some tools
+      ],
+
+      "settings": {
+        // Use bash as the default terminal shell
+        "terminal.integrated.defaultProfile.linux": "bash",
+
+        // Terraform: format on save so your .tf files stay clean automatically
+        "[terraform]": {
+          "editor.defaultFormatter": "hashicorp.terraform",
+          "editor.formatOnSave": true
+        },
+
+        // Go: format on save using goimports (handles imports and formatting together)
+        "[go]": {
+          "editor.defaultFormatter": "golang.go",
+          "editor.formatOnSave": true
+        },
+        "go.formatTool": "goimports",
+
+        // General editor quality of life
+        "editor.rulers": [120],             // soft line length guide at 120 chars
+        "editor.tabSize": 2,                // 2 spaces is standard in Terraform and YAML
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true
+      }
+    }
+  },
+
+  // Commands that run once after the container is created
+  // Good place for one-time setup that isn't covered by features
+  "postCreateCommand": "go install golang.org/x/tools/cmd/goimports@latest && echo 'Environment ready!'",
+
+  // Run as the default non-root vscode user (a security best practice)
+  "remoteUser": "vscode"
+}
