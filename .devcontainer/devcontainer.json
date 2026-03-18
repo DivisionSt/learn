@@ -103,7 +103,7 @@
 
   // Commands that run once after the container is created
   // Good place for one-time setup that isn't covered by features
-  "postCreateCommand": "go install golang.org/x/tools/cmd/goimports@latest && echo 'Environment ready!'",
+  "postCreateCommand": "go install golang.org/x/tools/cmd/goimports@latest && sudo apt-get update && sudo apt-get install -y git-lfs && git lfs install && echo 'Environment ready!'",
 
   // Run as the default non-root vscode user (a security best practice)
   "remoteUser": "vscode"
