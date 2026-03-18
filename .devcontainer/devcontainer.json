@@ -43,6 +43,12 @@
     // Node.js LTS: not your focus, but many cloud tools and CLIs depend on it quietly
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"
+    },
+
+    // Python 3.12: needed for some cloud tools and scripting
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12",
+      "installTools": true
     }
   },
 
@@ -103,7 +109,7 @@
 
   // Commands that run once after the container is created
   // Good place for one-time setup that isn't covered by features
-  "postCreateCommand": "go install golang.org/x/tools/cmd/goimports@latest && sudo apt-get update && sudo apt-get install -y git-lfs && git lfs install && echo 'Environment ready!'",
+  "postCreateCommand": "pip install uv && go install golang.org/x/tools/cmd/goimports@latest && sudo apt-get update && sudo apt-get install -y git-lfs && git lfs install && echo 'Environment ready!'",
 
   // Run as the default non-root vscode user (a security best practice)
   "remoteUser": "vscode"
